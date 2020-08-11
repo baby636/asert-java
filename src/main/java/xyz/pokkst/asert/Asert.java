@@ -13,11 +13,12 @@ public class Asert {
     /**
      * Compute aserti-2d DAA target
      */
-    public static BigInteger computeAsertTarget(BigInteger refTarget, BigInteger referenceBlockTime, BigInteger referenceBlockHeight,
+    public static BigInteger computeAsertTarget(BigInteger refTarget, BigInteger referenceBlockAncestorTime, BigInteger referenceBlockHeight,
                                                 BigInteger evalBlockTime, BigInteger evalBlockHeight) {
-        Preconditions.checkState(evalBlockHeight.compareTo(referenceBlockHeight) > 0);
+        Preconditions.checkState(evalBlockHeight.compareTo(referenceBlockHeight) >= 0);
         BigInteger heightDiff = evalBlockHeight.subtract(referenceBlockHeight);
-        BigInteger timeDiff = evalBlockTime.subtract(referenceBlockTime);
+        //referenceBlockAncestorTime is the timestamp of the ancestor of the anchor block
+        BigInteger timeDiff = evalBlockTime.subtract(referenceBlockAncestorTime);
         //used by asert. two days in seconds.
         BigInteger halfLife = BigInteger.valueOf(2L * 24L * 60L * 60L);
         BigInteger rbits = BigInteger.valueOf(16L);
@@ -58,10 +59,10 @@ public class Asert {
         return BigInteger.valueOf(Utils.encodeCompactBits(target));
     }
 
-    public static BigInteger computeAsertTarget(int referenceBlockBits, BigInteger referenceBlockTime, BigInteger referenceBlockHeight,
+    public static BigInteger computeAsertTarget(int referenceBlockBits, BigInteger referenceBlockAncestorTime, BigInteger referenceBlockHeight,
                                                 BigInteger evalBlockTime, BigInteger evalBlockHeight) {
         BigInteger refTarget = Utils.decodeCompactBits(referenceBlockBits);
-        return computeAsertTarget(refTarget, referenceBlockTime, referenceBlockHeight, evalBlockTime, evalBlockHeight);
+        return computeAsertTarget(refTarget, referenceBlockAncestorTime, referenceBlockHeight, evalBlockTime, evalBlockHeight);
     }
 
 }
